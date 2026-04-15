@@ -35,16 +35,6 @@ Usuário → EC2 (Flask) → RDS MySQL (dados)
 - API REST com retorno em JSON
 - Servidor rodando permanentemente com systemd
 
-## Estrutura do Projeto
-
-pokedex/
-├── app.py # Servidor Flask + rotas da API
-├── popular_banco.py # Script para popular o banco via PokeAPI
-├── upload_imagens_s3.py # Script para upload das imagens no S3
-├── templates/
-│ └── index.html # Frontend da Pokédex
-├── .gitignore
-└── README.md
 
 ## Como Executar
 

@@ -135,6 +135,12 @@ Este projeto foi desenvolvido como prática de integração entre:
 - Desenvolvimento backend com Python Flask
 - Desenvolvimento frontend com HTML, CSS e JavaScript
 
+## Demonstração
+
+https://github.com/user-attachments/assets/b346cdef-81f0-4beb-9294-81f5d72f32f6
+
+
+
 ## Autor
 
 Lucas Jose

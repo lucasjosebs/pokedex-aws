@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #cc0000;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .busca {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .busca input {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #cc0000;
+            border-radius: 25px;
+            width: 300px;
+            outline: none;
+        }
+
+        .busca button {
+            padding: 10px 25px;
+            font-size: 16px;
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .busca button:hover {
+            background-color: #aa0000;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+        }
+
+        .card .numero {
+            color: #888;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .card .nome {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .tipos {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .tipo {
+            padding: 3px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tipo-fogo { background-color: #F08030; }
+        .tipo-água { background-color: #6890F0; }
+        .tipo-planta { background-color: #78C850; }
+        .tipo-elétrico { background-color: #F8D030; color: #333; }
+        .tipo-voador { background-color: #98D8D8; color: #333; }
+        .tipo-veneno { background-color: #A040A0; }
+        .tipo-normal { background-color: #A8A878; }
+
+        .sem-resultado {
+            text-align: center;
+            color: #888;
+            font-size: 20px;
+            margin-top: 50px;
+            grid-column: 1/-1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pokédex</h1>
+
+    <div class="busca">
+        <input type="text" id="campo-busca" placeholder="Nome, tipo ou número..." />
+        <button onclick="buscar()">Buscar</button>
+    </div>
+
+    <div class="grid" id="grid-pokemon"></div>
+
+    <script>
+        function getTipoClass(tipo) {
+            if (!tipo) return '';
+            const t = tipo.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+            return `tipo tipo-${t}`;
+        }
+
+        function criarCard(pokemon) {
+            return `
+                <div class="card">
+                    <img src="${pokemon.url_imagem}" alt="${pokemon.nome}">
+                    <div class="numero">#${String(pokemon.numero).padStart(3, '0')}</div>
+                    <div class="nome">${pokemon.nome}</div>
+                    <div class="tipos">
+                        <span class="${getTipoClass(pokemon.tipo1)}">${pokemon.tipo1}</span>
+                        ${pokemon.tipo2 ? `<span class="${getTipoClass(pokemon.tipo2)}">${pokemon.tipo2}</span>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderizar(pokemons) {
+            const grid = document.getElementById('grid-pokemon');
+            if (pokemons.length === 0) {
+                grid.innerHTML = '<div class="sem-resultado">Nenhum pokémon encontrado.</div>';
+                return;
+            }
+            grid.innerHTML = pokemons.map(criarCard).join('');
+        }
+
+        function buscar() {
+            const termo = document.getElementById('campo-busca').value;
+            const url = termo
+                ? `http://54.212.241.74:5000/pokemon/buscar?q=${termo}`
+                : `http://54.212.241.74:5000/pokemon`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => renderizar(data))
+                .catch(err => console.error('Erro:', err));
+        }
+
+        buscar();
+    </script>
+
+</body>
+</html>
